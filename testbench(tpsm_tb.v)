@@ -1,0 +1,57 @@
+`timescale 1ns / 1ps
+
+module tpsm_tb;
+
+reg [3:0] ps;
+reg clk;
+reg rst;
+
+wire [3:0] LED;
+wire [1:0] count;
+wire en;
+
+tpsm uut(
+    .ps(ps),
+    .clk(clk),
+    .rst(rst),
+    .LED(LED),
+    .count(count),
+    .en(en)
+);
+
+always #5 clk = ~clk;
+
+initial begin
+
+    clk = 0;
+    rst = 1;
+    ps = 4'b0000;
+
+    #10;
+    rst = 0;
+
+    // Test all four tyres
+    ps = 4'b1111;
+    #40;
+
+    // Test tyre 3
+    ps = 4'b0100;
+    #40;
+
+    // Test tyre 2
+    ps = 4'b0010;
+    #40;
+
+    // Test tyre 1
+    ps = 4'b0001;
+    #40;
+
+    // No tyre warning
+    ps = 4'b0000;
+    #40;
+
+    $finish;
+
+end
+
+endmodule
